@@ -1,30 +1,36 @@
 import streamlit as st
 
-# Function for the homepage
-def homepage():
-    st.title("Welcome to the Home Page")
-    st.write("This is the home page of the app.")
+# Function for processing the chatbot response
+def chatbot(input_text, history):
+    # Generate a simple response (this can be replaced with more advanced logic)
+    response = f"Chatbot says: {input_text}"
     
-# Function for the chatbot page
-def chatbot_page():
-    st.title("Chatbot Interface")
-    st.write("Chatbot page goes here!")
-    input_text = st.text_input("Type your message:")
-    if input_text:
-        st.write(f"Chatbot says: {input_text}")  # Simple echo response (replace with real chatbot logic)
-        
-# Function for the about page
-def about_page():
-    st.title("About")
-    st.write("This is a simple app to demonstrate page navigation in Streamlit.")
+    # Add user message and chatbot response to history
+    history.append({"role": "user", "message": input_text})
+    history.append({"role": "chatbot", "message": response})
+    
+    return history
 
-# Navigation sidebar
-page = st.sidebar.selectbox("Choose a page", ["Home", "Chatbot", "About"])
+# Streamlit UI components
+st.title("Chatbot Interface")
+st.subheader("Chat with the bot! 👇")
 
-# Conditionally display the selected page
-if page == "Home":
-    homepage()
-elif page == "Chatbot":
-    chatbot_page()
-elif page == "About":
-    about_page()
+# Initialize history list to keep track of conversation
+if 'history' not in st.session_state:
+    st.session_state.history = []
+
+# Create the input field for user message
+input_text = st.text_input("You: ", "")
+
+# If user submits a message, process it and update the history
+if input_text:
+    st.session_state.history = chatbot(input_text, st.session_state.history)
+
+# Display the conversation as chat blocks (user and chatbot messages)
+if st.session_state.history:
+    for msg in st.session_state.history:
+        if msg["role"] == "user":
+            st.markdown(f'<div style="text-align: left; padding: 10px; background-color: #DCF8C6; border-radius: 5px;">{msg["message"]}</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div style="text-align: right; padding: 10px; background-color: #ECECEC; border-radius: 5px;">{msg["message"]}</div>', unsafe_allow_html=True)
+
