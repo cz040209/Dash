@@ -15,7 +15,7 @@ def chatbot(input_text, history):
 st.title("Chatbot Interface")
 st.subheader("Chat with the bot! 👇")
 
-# Initialize history list to keep track of conversation
+# Initialize history list to keep track of conversation in session state
 if 'history' not in st.session_state:
     st.session_state.history = []
 
@@ -31,6 +31,5 @@ if st.session_state.history:
     for msg in st.session_state.history:
         if msg["role"] == "user":
             st.markdown(f'<div style="text-align: left; padding: 10px; background-color: #DCF8C6; border-radius: 5px;">{msg["message"]}</div>', unsafe_allow_html=True)
-        else:
+        elif msg["role"] == "chatbot":
             st.markdown(f'<div style="text-align: right; padding: 10px; background-color: #ECECEC; border-radius: 5px;">{msg["message"]}</div>', unsafe_allow_html=True)
-
